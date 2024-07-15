@@ -5,13 +5,15 @@
 package com.ega.springwsoap.models;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Data;
 import org.json.JSONObject;
 
 /**
  * Це модель запису в лог-файл. 
  * Він містить інформацію стосовно часу коли відбулася подія, IP, HTTP метод, ресурс який запрошував запит та все інше.
- * @author E-Rigi Academy
+ * @author sa
  */
 @Data
 public class LogRecord {
@@ -23,6 +25,7 @@ public class LogRecord {
     private boolean isError;
     private String descr;
     private Answer result;
+    private Map<String, String> headers;
 
     //Конструктор класу замовчки
     public LogRecord(){
@@ -33,6 +36,7 @@ public class LogRecord {
         this.body = "";
         this.isError = true;
         this.descr = "log record is not init!";
+        this.headers = new HashMap<>();
                 
     }
     
@@ -43,6 +47,7 @@ public class LogRecord {
         jsData.put("ip",getIp());
         jsData.put("httpMethod",getHttpMethod());
         jsData.put("resource",getResource());
+        jsData.put("headers", headers);
         jsData.put("isError",isError());
         jsData.put("descr",getDescr());
         jsData.put("result",getResult());

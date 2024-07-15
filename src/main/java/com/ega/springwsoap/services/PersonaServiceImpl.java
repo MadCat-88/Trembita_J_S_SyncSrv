@@ -280,6 +280,7 @@ public class PersonaServiceImpl implements PersonaInterface{
         log.setIp(HttpRequestUtils.getClientIpAddress());
         log.setHttpMethod(HttpRequestUtils.getHttpMethod());
         log.setError(!ans.getStatus());
+        log.setHeaders(HttpRequestUtils.getHeaders());
         log.setResource(HttpRequestUtils.getPath());
         log.setResult(ans);
         log.setDescr(ans.getDescr());
