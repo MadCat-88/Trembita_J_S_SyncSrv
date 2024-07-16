@@ -138,12 +138,12 @@ sudo apt install git -y
 echo "******************************************************************************
 *                  Клонування Spring SOAP Web-Service із Github
 ******************************************************************************"
-if [ -e ./SpringWSoap ]; then
-	echo "проєкт SpringWSoap вже існує, клонування пропущено"
+if [ -e ./SpringWSsoap ]; then
+	echo "проєкт SpringWSsoap вже існує, клонування пропущено"
 else 
 	git clone https://github.com/Wishmaster-sa/SpringWSsoap.git
 
-	sudo chown -R $currentuser:$currentuser ./SpringWsSoap
+	sudo chown -R $currentuser:$currentuser ./SpringWSsoap
 #	sudo mv ./SpringWSsoap/maven ./SpringWSsoap/.mvn
 fi
 
