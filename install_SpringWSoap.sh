@@ -141,17 +141,17 @@ echo "**************************************************************************
 if [ -e ./SpringWSoap ]; then
 	echo "проєкт SpringWSoap вже існує, клонування пропущено"
 else 
-	git clone https://github.com/Wishmaster-sa/SpringWSoap.git
+	git clone https://github.com/Wishmaster-sa/SpringWSsoap.git
 
-	sudo chown -R $currentuser:$currentuser ./SpringWSoap
-#	sudo mv ./SpringWS/maven ./SpringWS/.mvn
+	sudo chown -R $currentuser:$currentuser ./SpringWsSoap
+#	sudo mv ./SpringWSsoap/maven ./SpringWSsoap/.mvn
 fi
 
 
 echo "******************************************************************************
 *                  Налаштування проєкта
 ******************************************************************************"
-propertiesFile="./SpringWSoap/src/main/resources/application.properties"  
+propertiesFile="./SpringWSsoap/src/main/resources/application.properties"  
 
 old_user=$(cat $propertiesFile | \
   awk -F'[=]' '$1 == "spring.datasource.username" {print "username="$2}' | sed 's/.*=//')
@@ -167,7 +167,7 @@ old_base=$(cat $propertiesFile |   awk -F'[=]' '$1 == "spring.datasource.url" {p
 
 sed -i "s/$old_base/$db_name/g" $propertiesFile
 
-cd ./SpringWSoap
+cd ./SpringWSsoap
 sudo bash mvnw -N wrapper:wrapper
 
 
