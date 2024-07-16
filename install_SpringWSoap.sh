@@ -168,7 +168,7 @@ old_base=$(cat $propertiesFile |   awk -F'[=]' '$1 == "spring.datasource.url" {p
 sed -i "s/$old_base/$db_name/g" $propertiesFile
 
 cd ./SpringWSsoap
-sudo bash mvnw -N wrapper:wrapper
+#sudo bash mvnw -N wrapper:wrapper
 
 
 echo "******************************************************************************
