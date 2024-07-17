@@ -5,12 +5,13 @@
 package com.ega.springwsoap.services;
 
 import com.ega.springwsoap.interfaces.LogRecordInterface;
-import com.ega.springwsoap.models.AppSettings;
 import com.ega.springwsoap.models.LogRecord;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,17 +19,21 @@ import org.springframework.stereotype.Component;
  * @author sa
  */
 @Component
+@PropertySource("classpath:application.properties")
 public class LogRecordService implements LogRecordInterface{
-    //ініціалізуем файл налаштувань
-    private final AppSettings appSettings = new AppSettings();
+    //ініціалізація файлу налаштувань
+    
+    @Value("${webservice.settings.logfilename:springWSrest.log}")
+    //повний шлях до файлу лога
+    private String logFileName;
 
-    //повний шлях до файла лога
-    private final String logFileName = appSettings.getLogFileName();
+    @Value("${webservice.settings.loglevel:0}") 
     //рівень логування.
-    private final int logLevel = appSettings.getLogLevel();
+    private int logLevel;
 
     @Override
     public Boolean addRecord(LogRecord record) {
+        System.out.println("logFileName = "+logFileName+"\nLogLevel = "+logLevel);
         
         switch(logLevel){
             case 0 -> AddRecordLevel0(record); //немає лога

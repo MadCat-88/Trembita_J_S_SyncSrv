@@ -1,6 +1,5 @@
 com/ega/springwsoap/repository/PersonaLocalRepository.class
 io/spring/guides/gs_producing_web_service/AddPersonaResponse.class
-com/ega/springwsoap/models/AppSettings.class
 com/ega/springwsoap/interfaces/LogRecordInterface.class
 io/spring/guides/gs_producing_web_service/package-info.class
 com/ega/springwsoap/services/PersonaServiceImpl.class

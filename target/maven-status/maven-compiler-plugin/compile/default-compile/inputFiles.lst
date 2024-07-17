@@ -5,7 +5,6 @@
 /home/sa/NetBeansProjects/SpringWSoap/src/main/java/com/ega/springwsoap/interfaces/LogRecordInterface.java
 /home/sa/NetBeansProjects/SpringWSoap/src/main/java/com/ega/springwsoap/interfaces/PersonaInterface.java
 /home/sa/NetBeansProjects/SpringWSoap/src/main/java/com/ega/springwsoap/models/Answer.java
-/home/sa/NetBeansProjects/SpringWSoap/src/main/java/com/ega/springwsoap/models/AppSettings.java
 /home/sa/NetBeansProjects/SpringWSoap/src/main/java/com/ega/springwsoap/models/LogRecord.java
 /home/sa/NetBeansProjects/SpringWSoap/src/main/java/com/ega/springwsoap/models/Persona.java
 /home/sa/NetBeansProjects/SpringWSoap/src/main/java/com/ega/springwsoap/repository/PersonaLocalRepository.java

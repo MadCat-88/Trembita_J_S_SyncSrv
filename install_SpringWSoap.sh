@@ -151,7 +151,7 @@ fi
 echo "******************************************************************************
 *                  Налаштування проєкта
 ******************************************************************************"
-propertiesFile="./SpringWSsoap/src/main/resources/application.properties"  
+propertiesFile="./SpringWSsoap/config/application.properties"  
 
 old_user=$(cat $propertiesFile | \
   awk -F'[=]' '$1 == "spring.datasource.username" {print "username="$2}' | sed 's/.*=//')
@@ -169,6 +169,9 @@ sed -i "s/$old_base/$db_name/g" $propertiesFile
 
 cd ./SpringWSsoap
 #sudo bash mvnw -N wrapper:wrapper
+/usr/lib/apache-netbeans/java/maven/bin/mvn package
+
+sudo chown -R $currentuser:$currentuser ./SpringWSsoap
 
 
 echo "******************************************************************************
