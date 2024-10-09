@@ -167,6 +167,11 @@ old_base=$(cat $propertiesFile |   awk -F'[=]' '$1 == "spring.datasource.url" {p
 
 sed -i "s/$old_base/$db_name/g" $propertiesFile
 
+#modify service daemon for current user
+autostartFile="./SpringWSsoap/springwsoap.service" 
+sed -i "s/User=sa/User=$currentuser/g" $autostartFile
+
+
 cd ./SpringWSsoap
 #sudo bash mvnw -N wrapper:wrapper
 /usr/lib/apache-netbeans/java/maven/bin/mvn package
