@@ -59,9 +59,9 @@
 
 http://ваш_IP_адрес:8080/
 
-7. Якщо ви бажаєте налаштувати щоб веб-сервіс запускався автоматично після перезапуску системи, то виконайте наступну команду (ви повинні знаходитись в каталогі з сервісом SpringWSrest):
+7. Якщо ви бажаєте налаштувати щоб веб-сервіс запускався автоматично після перезапуску системи, то виконайте наступну команду (ви повинні знаходитись в каталогі з сервісом SpringWSsoap):
    ```bash
-   bash springws-service.sh 
+   bash springws-service.sh install
    ```
    
 ### Ручне встановлення
@@ -80,72 +80,85 @@ sudo apt install openjdk-21-jdk
 
 #### Створення БД. Цей сервіс використовує PostgreSQL. Створіть базу даних та користувача на сервері СКБД.
 
-```bash
-sudo apt install postgresql postgresql-contrib
-```
+   ```bash
+   sudo apt install postgresql postgresql-contrib
+   ```
 
 #### Налаштування бази даних PostgreSQL
 
 Оберіть назву та створіть бази даних, логін та пароль користувача для підключення до неї. Ці параметри також мають бути задані у відповідному файлі конфігурації застосунку Spring - application.settings.
-```bash
-sudo -i -u postgres psql
-```
-CREATE DATABASE db_spring;
+   ```bash
+   sudo -i -u postgres psql
+   ```
+   ```
+   CREATE DATABASE db_spring;
+   ```
 
-CREATE ROLE spring LOGIN PASSWORD 'pass';
+   ```
+   CREATE ROLE spring LOGIN PASSWORD 'pass';
+   ```
 
-GRANT ALL PRIVILEGES ON DATABASE db_spring TO spring;
+   ```
+   GRANT ALL PRIVILEGES ON DATABASE db_spring TO spring;
+   ```
 
 Для вихода з командного рядку БД psql введіть \q
 
-#### Завантажити та встановити середовище розробки Apache NetBeans ви можете через браузер, або через додаток Ubuntu Software
+#### Завантажити та встановити середовище розробки Apache NetBeans ви можете через браузер, або через додаток Ubuntu Software, або якщо використовується командний рядок за допомогою наступної команди:
+   ```bash
+   curl https://archive.apache.org/dist/netbeans/netbeans-installers/19/apache-netbeans_19-1_all.deb --output apache-netbeans_19-1_all.deb
+   ```
+та
+
+   ```bash
+   sudo dpkg -i apache-netbeans_19-1_all.deb
+   ```
+   
 
 #### Завантажити Github клієнт
 
-```bash
-sudo apt install git
-```
-#### Отримаємо та запам'ятаємо ім'я поточного користувача
+   ```bash
+   sudo apt install git
+   ```
 
-```bash
-whoami
-```
 #### Клонування репозиторію
 
 ```bash
 git clone https://github.com/Wishmaster-sa/SpringWSsoap.git
-
-cd SpringWSoap
 ```
-```bash
-sudo bash mvnw -N wrapper:wrapper
-```
-
-
-#### Подальші дії: Запустіть середовище розробки Apache NetBeans, та виконайте індексування репозіторію Maven. Для цього:
-   
-   1. В середовищі розробки (IDE) Apache NetBeans натисніть меню Tools->Options
-   2. У вікні що відкрилося натисніть пункт Java
-   3. У панелі вкладок нижче перейдіть на вкладку Maven 
-   4. Виберіть пункт Index в меню ліворуч
-   5. Після чого натисніть кнопку Index Now
-   6. Зачекайте доки індексування репозіторію буде завершено, після чого можно відкривати проект (може зайняти кілька хвилин).
 
 #### Налаштування підключення до БД в проєкті
 
-Відкрити файл конфігурації застосунку Spring `./SpringWSoap/src/main/resources/application.properties` та встановити коректні параметри підключення до БД - ім'я бази, ім'я та пароль користувача згідно значень, заданих на [кроці налаштування бази даних PostgreSQL](#налаштування-бази-даних-postgresql). Наприклад:
+Відкрити файл конфігурації застосунку Spring `./SpringWSsoap/config/external-config.properties` 
+
+```bash
+nano SpringWSsoap/config/external-config.properties
+```
+
+та встановити коректні параметри підключення до БД - ім'я бази, ім'я та пароль користувача згідно значень, заданих на [кроці налаштування бази даних PostgreSQL](#налаштування-бази-даних-postgresql). 
+Наприклад:
+
 ```
 spring.datasource.url=jdbc:postgresql://localhost:5432/dbname
 spring.datasource.username=dbusername
 spring.datasource.password=dbuserpassword
 ```
+### Переходимо до каталогу з проєктом
+   ```bash
+   cd SpringWSsoap
+   ```
 
-### Запуск сервісу
+### Компілюємо вихідний файл
 
+   ```bash
+   /usr/lib/apache-netbeans/java/maven/bin/mvn package
+   ```
 
-```bash
-java -jar ./target/SpringWSoap-0.0.1-SNAPSHOT.jar
-```
+### Запуск сервісу (ви повинні знаходитись в каталозі з сервісом SpringWSsoap)
+
+   ```bash
+   java -jar ./target/SpringWSoap-0.0.1-SNAPSHOT.jar
+   ```
 
 Сервіс запуститься і буде очікувати на вхідні мережеві з'єднання на порту 8080 за адресою
 http://localhost:8080/ws/
@@ -160,32 +173,21 @@ http://localhost:8080/ws/
 - Doc: http://[адреса серверу]:8080/
 - WSDL-файл: http://[адреса серверу]:8080/ws/persons.wsdl
 
-## Наповнення бази даних тестовими записами
-Для цілей швидкого розгортання та використання сервісу ми додаємо Python-скрипт, який дозволяє швидко згенерувати
-необхідну кількість записів в БД.
-   ```python
-   python fill_fakerdb_soap.py 100
-   ```
-де 100 - кількість об'єктів (користувачів), яка буде згенерована та додана до БД. Ви можете встановити іншу кількість записів.
-
 ## Налаштування як системної служби systemd
 
-Для цілей швидкого запуску сервісу ми додаємо скрипт `springws-service.sh` для автоматизації процесу встановленя веб-додатка як системної служби, та його видалення та очищення системи.
+Для цілей швидкого запуску сервісу ми додаємо скрипт `springwsoap-service.sh` для автоматизації процесу встановленя веб-додатка як системної служби, та його видалення та очищення системи.
 
 ### Використання скрипта springwsoap-service.sh
-1. Скомпілюйте через середовище розробки та скопіюйте jar-файл веб-сервісу до цільової системи.
-   Ви повинні отримати в папці SpringWSoap/target/SpringWSoap-0.0.1-SNAPSHOT.jar скомпільований jar-файл 
-
-2. Зробіть скріпт виконуваним:
+1. Зробіть скріпт виконуваним:
 
    ```bash
    chmod +x springwsoap-service.sh
    ```
 
-3. Запустіть скрипт з каталогу SpringWS:
+2. Запустіть скрипт з каталогу SpringWSsoap:
 
    ```bash
-   ./springwsoap-service.sh install
+   sudo bash springwsoap-service.sh install
    ```
 
 Скрипт автоматично вcтановить скомпільований jar як системну службу.
@@ -210,6 +212,27 @@ http://localhost:8080/ws/
 3) Припинити сервіс
 4) Видалити сервіс
 5) Вихід
+
+## Наповнення бази даних тестовими записами
+Для цілей швидкого розгортання та використання сервісу ми додаємо Python-скрипт, який дозволяє швидко згенерувати
+необхідну кількість записів в БД.
+
+### Встановимо python (якщо він у вас вже є, то цей пункт можно пропустити)
+   ```bash
+   sudo apt install python3 python3-pip -y
+   ```
+
+### Встановимо біліотеку Faker яка вміє генерувати випадкові ФІО та інше.
+   ```bash
+   python3 -m pip install faker
+   ```
+
+### Запустим наповнення бази даних (у вас повинен бути вже запущений SpringWSrest сервіс)
+   ```python
+   python fill_fakerdb_soap.py 100
+   ```
+де 100 - кількість об'єктів (користувачів), яка буде згенерована та додана до БД. Ви можете встановити іншу кількість записів.
+
 
 ## Ліцензія
 
