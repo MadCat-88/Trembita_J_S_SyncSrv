@@ -194,17 +194,17 @@ http://localhost:8080/ws/
 
 Якщо ви бажаєте видалити сервіс з переліку системних служб, то виконайте команду
    ```bash
-   ./springwsoap-service.sh remove
+   sudo bash springwsoap-service.sh remove
    ```
 Скрипт автоматично зупинить та видалить системну службу та відповідні залежності.
 
 Запустити сервіс
    ```bash
-   ./springwsoap-service.sh start
+   sudo bash springwsoap-service.sh start
    ```
 Припинити сервіс
    ```bash
-   ./springwsoap-service.sh stop
+   sudo bash springwsoap-service.sh stop
    ```
 Якщо ви виконаєте файл без аргументів командного рядку, то вам буде запропоновано меню з наступними опціями:
 1) Встановити сервіс
@@ -229,7 +229,7 @@ http://localhost:8080/ws/
 
 ### Запустим наповнення бази даних (у вас повинен бути вже запущений SpringWSrest сервіс)
    ```python
-   python fill_fakerdb_soap.py 100
+   python3 fill_fakerdb_soap.py 100
    ```
 де 100 - кількість об'єктів (користувачів), яка буде згенерована та додана до БД. Ви можете встановити іншу кількість записів.
 
