@@ -4,14 +4,17 @@
 function installService() {
 	echo 'Встановлюю сервіс...'
 	sudo mkdir /opt/SpringWSoap
+	sudo mkdir /opt/SpringWSoap/config
 	sudo cp ./target/SpringWSoap-0.0.1-SNAPSHOT.jar /opt/SpringWSoap
-	sudo cp ./webservice.settings /opt/SpringWSoap
+	sudo cp -R ./config/* /opt/SpringWSoap/config
 	sudo cp ./springwsoap.service /etc/systemd/system
-	sudo sudo systemctl daemon-reload
+	sudo systemctl daemon-reload
 	sudo systemctl enable springwsoap.service
 	sudo systemctl start springwsoap.service
 	sudo systemctl status springwsoap.service
 }
+
+
 
 function removeService() {
 	echo "Видаляю SpringWSoap сервіс..."
