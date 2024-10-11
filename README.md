@@ -104,7 +104,7 @@ whoami
 #### Клонування репозиторію
 
 ```bash
-git clone https://github.com/Wishmaster-sa/SpringWSoap.git
+git clone https://github.com/Wishmaster-sa/SpringWSsoap.git
 
 cd SpringWSoap
 ```
