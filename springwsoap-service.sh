@@ -3,6 +3,10 @@
 
 function installService() {
 	echo 'Встановлюю сервіс...'
+	#modify service daemon for current user
+	autostartFile="./springwsoap.service"
+ 	currentuser=$(stat -c "%G" .)
+	sed -i "s/User=sa/User=$currentuser/g" $autostartFile
 	sudo mkdir /opt/SpringWSoap
 	sudo mkdir /opt/SpringWSoap/config
 	sudo cp ./target/SpringWSoap-0.0.1-SNAPSHOT.jar /opt/SpringWSoap
