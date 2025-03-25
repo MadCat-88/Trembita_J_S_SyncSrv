@@ -4,6 +4,7 @@
  */
 package com.ega.springwsoap.models;
 
+//import io.spring.guides.gs_producing_web_service.PersonaXml;
 import io.spring.guides.gs_producing_web_service.PersonaXml;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -50,6 +50,7 @@ public class Persona {
     private String lastName;
     private String patronymic;
     private LocalDate birthDate;
+    private String gender;
     private String pasport;
     private String unzr;                    //УНЗР
     private Boolean isChecked;              //персона перевірена
@@ -69,6 +70,7 @@ public class Persona {
         this.patronymic = "";
         this.birthDate = LocalDate.of(1, 1, 1);
         this.pasport = "";
+        this.gender = "";
         this.unzr = "";
         this.isChecked = false;
         this.CheckedRequest = LocalDateTime.of(1, 1, 1,0,0,0);
@@ -83,6 +85,7 @@ public class Persona {
         this.pasport = personaXml.getPasport();
         this.rnokpp = personaXml.getRnokpp();
         this.unzr = personaXml.getUnzr();
+        this.gender = personaXml.getGender();
         this.isChecked = personaXml.isIsChecked();
         XMLGregorianCalendar chekedRequest = personaXml.getCheckedRequest();
         if(chekedRequest!=null){
@@ -107,6 +110,7 @@ public class Persona {
         jsData.put("firstName",getFirstName());
         jsData.put("lastName",getLastName());
         jsData.put("patronymic",getPatronymic());
+        jsData.put("gender",getGender());
         jsData.put("unzr",getUnzr());
         jsData.put("rnokpp",getRnokpp());
         jsData.put("pasport",getPasport());
@@ -294,6 +298,7 @@ public class Persona {
         } catch (DatatypeConfigurationException ex) {
         }
 
+        personaXML.setGender(this.getGender());
         personaXML.setAge(this.getAge());
         personaXML.setRnokpp(this.getRnokpp());
         personaXML.setUnzr(this.getUnzr());

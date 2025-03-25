@@ -10,15 +10,16 @@ import com.ega.springwsoap.models.Answer;
 import com.ega.springwsoap.models.LogRecord;
 import com.ega.springwsoap.models.Persona;
 import com.ega.springwsoap.repository.PersonaRepository;
+
 import io.spring.guides.gs_producing_web_service.AddPersonaRequest;
 import io.spring.guides.gs_producing_web_service.AddPersonaResponse;
+import io.spring.guides.gs_producing_web_service.AnswerXml;
 import io.spring.guides.gs_producing_web_service.DeletePersonaResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaListResponse;
-import io.spring.guides.gs_producing_web_service.GetPersonaRequest;
-import io.spring.guides.gs_producing_web_service.GetPersonaResponse;
 import io.spring.guides.gs_producing_web_service.PersonaXml;
 import io.spring.guides.gs_producing_web_service.UpdatePersonaRequest;
 import io.spring.guides.gs_producing_web_service.UpdatePersonaResponse;
+
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 
 
@@ -66,7 +66,7 @@ public class PersonaServiceImpl implements PersonaInterface{
             List <Persona> persons;
 
             persons = repository.findAll();
-            persons.forEach(persona -> response.getPersonaXml().add(persona.toXML()));
+            persons.forEach(persona -> response.getPersonaXml().add((PersonaXml) persona.toXML()));
             
             //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
             ans.setStatus(Boolean.TRUE);            
@@ -118,10 +118,10 @@ public class PersonaServiceImpl implements PersonaInterface{
     //Докладніше https://www.baeldung.com/java-override
     @Override
     //Функція знаходить та повертає персону по його rnokpp
-    public GetPersonaResponse find(String rnokpp) {
+    public GetPersonaListResponse find(String rnokpp) {
         Answer ans;
         ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
-        GetPersonaResponse response = new GetPersonaResponse();
+        GetPersonaListResponse response = new GetPersonaListResponse();
         Persona persona;
           
         try{
@@ -131,7 +131,8 @@ public class PersonaServiceImpl implements PersonaInterface{
             if(result==null){
                 ans.setDescr("Person with RNOKPP: "+rnokpp+" not found in database");   //В описі відповіді вказуемо що запит успішний.
             }else{
-		response.setPersonaXml(result.toXML());
+                System.out.println(result.toXML().toString());
+		response.getPersonaXml().add(result.toXML());
                 ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
                 ans.setResult(result.toJSON().toString());       //Тут результат відповіді.
             }
@@ -195,7 +196,7 @@ public class PersonaServiceImpl implements PersonaInterface{
             }catch (Exception ex){                    //якщо помилка
                 ans.setDescr(ex.getMessage());        //надаємо опис помилки
             }
-          response.setAnswerXml(ans.toXml());
+          response.setAnswerXml((AnswerXml) ans.toXml());
           
            //записуємо лог
            writeLog(ans);
@@ -293,16 +294,21 @@ public class PersonaServiceImpl implements PersonaInterface{
 
     @Override
     //Пошук всіх персон по їх імені
-    public Answer findByFirstName(String firstName) {
+    public GetPersonaListResponse findByFirstName(String firstName) {
+          GetPersonaListResponse response = new GetPersonaListResponse();
           Answer ans;
           ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
           try{
             List<Persona> result = repository.findAllByFirstName(firstName);
+            JSONArray arr = new JSONArray();
+ 
             //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
             ans.setStatus(Boolean.TRUE);
             if(result.isEmpty()){
                 ans.setDescr("Person with firstName: "+firstName+" not found in database");   //В описі відповіді вказуемо що запит успішний.
             }else{
+                result.forEach(persona -> arr.put(persona.toJSON()));
+                result.forEach(persona -> response.getPersonaXml().add((PersonaXml) persona.toXML()));
                 ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
                 ans.setResult(Persona.listToJSON(result).toString());       //Тут результат відповіді.
             }
@@ -313,20 +319,24 @@ public class PersonaServiceImpl implements PersonaInterface{
           
           //записуем лог
           writeLog(ans);
-          return ans;           //повертаємо результат до контролера.
+          return response;           //повертаємо результат до контролера.
+          //return ans;           //повертаємо результат до контролера.
     }
     
     @Override
     //пошук всіх персон по початку їх призвища
-    public Answer findByLastNameWith(String firstName) {
+    public GetPersonaListResponse findByLastName(String lastName) {
+          GetPersonaListResponse response = new GetPersonaListResponse();
           Answer ans;
           ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
           try{
-            List<Persona> result = repository.findByLastNameStartingWith(firstName);
+            List<Persona> result = repository.findAllByLastName(lastName);
+            result.forEach(persona -> response.getPersonaXml().add((PersonaXml) persona.toXML()));
             //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
             ans.setStatus(Boolean.TRUE);
             if(result.isEmpty()){
-                ans.setDescr("Person with firstName: "+firstName+" not found in database");   //В описі відповіді вказуемо що запит успішний.
+                System.out.println("Person with lastName: "+lastName+" not found in database");
+                ans.setDescr("Person with lastName: "+lastName+" not found in database");   //В описі відповіді вказуемо що запит успішний.
             }else{
                 ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
                 ans.setResult(Persona.listToJSON(result).toString());       //Тут результат відповіді.
@@ -338,21 +348,25 @@ public class PersonaServiceImpl implements PersonaInterface{
           
           //записуем лог
           writeLog(ans);
-          return ans;           //повертаємо результат до контролера.
+          return response;           //повертаємо результат до контролера.
     }
 
 
     @Override
-    //пошук всіх персон яки в імені або призвище мають ці символи
-    public Answer findAllFirstNameContains(String firstName) {
+    public GetPersonaListResponse findByBirthDate(String birthDate) {
+          GetPersonaListResponse response = new GetPersonaListResponse();
           Answer ans;
+          LocalDate ld;
           ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
           try{
-            List<Persona> result = repository.findAllByFirstNameContaining(firstName);
+              ld = LocalDate.parse(birthDate);
+              
+            List<Persona> result = repository.findByBirthDateBetween(ld, ld);
+            result.forEach(persona -> response.getPersonaXml().add((PersonaXml) persona.toXML()));
             //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
             ans.setStatus(Boolean.TRUE);
             if(result.isEmpty()){
-                ans.setDescr("Person with firstName: "+firstName+" not found in database");   //В описі відповіді вказуемо що запит успішний.
+                ans.setDescr("Person with Birth Date: "+birthDate+" not found in database");   //В описі відповіді вказуемо що запит успішний.
             }else{
                 ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
                 ans.setResult(Persona.listToJSON(result).toString());       //Тут результат відповіді.
@@ -364,23 +378,21 @@ public class PersonaServiceImpl implements PersonaInterface{
           
           //записуем лог
           writeLog(ans);
-          return ans;           //повертаємо результат до контролера.
+          return response;           //повертаємо результат до контролера.
     }
 
     @Override
-    //пошук всіх персон вік яких входить до діапазону
-    public Answer findByAgeRange(Integer startAge, Integer endAge) {
+    public GetPersonaListResponse findByPasport(String pasport) {
+          GetPersonaListResponse response = new GetPersonaListResponse();
           Answer ans;
           ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
           try{
-            LocalDate startDate = LocalDate.now().minusYears(endAge);
-            LocalDate endDate = LocalDate.now().minusYears(startAge);
-            
-            List<Persona> result = repository.findByBirthDateBetween(startDate, endDate);
+            List<Persona> result = repository.findAllByPasport(pasport);
+            result.forEach(persona -> response.getPersonaXml().add((PersonaXml) persona.toXML()));
             //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
             ans.setStatus(Boolean.TRUE);
             if(result.isEmpty()){
-                ans.setDescr("Person with age beetween "+startAge+" and "+endAge+ " not found in database");   //В описі відповіді вказуемо що запит успішний.
+                ans.setDescr("Person with pasport: "+pasport+" not found in database");   //В описі відповіді вказуемо що запит успішний.
             }else{
                 ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
                 ans.setResult(Persona.listToJSON(result).toString());       //Тут результат відповіді.
@@ -392,8 +404,33 @@ public class PersonaServiceImpl implements PersonaInterface{
           
           //записуем лог
           writeLog(ans);
+          return response;           //повертаємо результат до контролера.
+    }
 
-          return ans;           //повертаємо результат до контролера.
+    @Override
+    public GetPersonaListResponse findByUnzr(String unzr) {
+          GetPersonaListResponse response = new GetPersonaListResponse();
+          Answer ans;
+          ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
+          try{
+            List<Persona> result = repository.findAllByUnzr(unzr);
+            result.forEach(persona -> response.getPersonaXml().add((PersonaXml) persona.toXML()));
+            //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
+            ans.setStatus(Boolean.TRUE);
+            if(result.isEmpty()){
+                ans.setDescr("Person with unzr: "+unzr+" not found in database");   //В описі відповіді вказуемо що запит успішний.
+            }else{
+                ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
+                ans.setResult(Persona.listToJSON(result).toString());       //Тут результат відповіді.
+            }
+          }catch (Exception ex){                    //якщо помилка
+            ans.setStatus(Boolean.FALSE);            
+            ans.setDescr(ex.getMessage());        //надаємо опис помилки
+          }
+          
+          //записуем лог
+          writeLog(ans);
+          return response;           //повертаємо результат до контролера.
     }
 
 

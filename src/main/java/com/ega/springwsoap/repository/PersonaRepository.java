@@ -30,9 +30,15 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>{
     List <Persona> findAllByFirstName(String firstName);
     
     //приклад пошуку персони по призвищу яке починається з заданного перфікса
-    List <Persona> findByLastNameStartingWith(String prefix);
+    //List <Persona> findByLastNameStartingWith(String prefix);
+
+    List <Persona> findAllByLastName(String prefix);
     
     List <Persona> findByBirthDateBetween(LocalDate startAge, LocalDate endAge);
+    
+    List <Persona> findAllByPasport(String pasport);
+
+    List <Persona> findAllByUnzr(String unzr);
     
     //приклад кастомного метода в якому напряму задається що щукати (всі імʼя яки мають в назві шаблон)
     @Query("SELECT e FROM Persona e WHERE e.firstName LIKE %:firstName%")

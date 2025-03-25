@@ -106,7 +106,7 @@
                                 </executions>
                                 <configuration>
                                         <sources>
-                                                <source>${project.basedir}/src/main/resources/persons.xsd</source>
+                                                <source>${project.basedir}/src/main/resources/SOAPService.xsd</source>
                                         </sources>
                                 </configuration>
                         </plugin>

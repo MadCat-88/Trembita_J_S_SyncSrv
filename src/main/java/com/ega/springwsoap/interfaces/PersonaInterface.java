@@ -5,7 +5,6 @@
 package com.ega.springwsoap.interfaces;
 
 import com.ega.springwsoap.models.Answer;
-import com.ega.springwsoap.models.Persona;
 import io.spring.guides.gs_producing_web_service.AddPersonaRequest;
 import io.spring.guides.gs_producing_web_service.AddPersonaResponse;
 import io.spring.guides.gs_producing_web_service.DeletePersonaResponse;
@@ -20,15 +19,16 @@ import io.spring.guides.gs_producing_web_service.UpdatePersonaResponse;
 public interface PersonaInterface {
    public GetPersonaListResponse showAllPersons();
    public AddPersonaResponse addPersona(AddPersonaRequest request);
-   public GetPersonaResponse find(String rnokpp);
+   public GetPersonaListResponse find(String rnokpp);
    public Answer checkup(String rnokpp);
    public Answer checkPersona(String rnokpp);
    public UpdatePersonaResponse updatePersona(UpdatePersonaRequest request);
    public DeletePersonaResponse deletePersona(String rnokpp);
-   public Answer findByFirstName(String firstName);
-   public Answer findByLastNameWith(String firstName);
-   public Answer findAllFirstNameContains(String firstName);
-   public Answer findByAgeRange(Integer startAge,Integer endAge);
+   public GetPersonaListResponse findByFirstName(String firstName);
+   public GetPersonaListResponse findByLastName(String lastName);
+   public GetPersonaListResponse findByBirthDate(String birthDate);
+   public GetPersonaListResponse findByPasport(String pasport);
+   public GetPersonaListResponse findByUnzr(String unzr);
    
   
 }
