@@ -23,11 +23,19 @@ import io.spring.guides.gs_producing_web_service.GetPersonaListByPasportRequest;
 import io.spring.guides.gs_producing_web_service.GetPersonaListByUnzrRequest;
 import io.spring.guides.gs_producing_web_service.GetPersonaListResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaRequest;
-import io.spring.guides.gs_producing_web_service.GetPersonaResponse;
 import io.spring.guides.gs_producing_web_service.UpdatePersonaRequest;
 import io.spring.guides.gs_producing_web_service.UpdatePersonaResponse;
 import jakarta.transaction.Transactional;
+import jakarta.xml.soap.Node;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPHeader;
+import jakarta.xml.soap.SOAPHeaderElement;
+import java.util.Iterator;
+import javax.xml.namespace.QName;
 import lombok.AllArgsConstructor;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 //Ця анотація відноситься до компоненту Lombok. Вона допомогає створити усі конструктори класів та перемених яки відносятся до данного класу.
 //Тут він потрібен для того, щоб ініціалізувати PersonaService service і таким чином включити його в область видимості фреймворка SPRING
@@ -41,74 +49,244 @@ public class PersonaController {
 
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaRequest")
 	@ResponsePayload
-	public GetPersonaListResponse getPersona(@RequestPayload GetPersonaRequest request) {
+	public GetPersonaListResponse getPersona(@RequestPayload GetPersonaRequest request, MessageContext messageContext) {
             System.out.println("WebService: Get persona by RNOKPP "+request.getRnokpp());
             System.out.println(""+request.toString());
-            return (GetPersonaListResponse) service.find(request.getRnokpp());
+            GetPersonaListResponse response = (GetPersonaListResponse) service.find(request.getRnokpp());
+
+            handleHeaders(messageContext);
+
+/*            
+            //Create Response Body and Header
+            SaajSoapMessage soapResponse = (SaajSoapMessage) messageContext.getResponse();
+            SOAPHeader soapResponseHeader;
+
+            SaajSoapMessage soapRequest = (SaajSoapMessage) messageContext.getRequest();
+            SOAPHeader soapRequestHeader;
+            
+            try {
+                soapResponseHeader = soapResponse.getSaajMessage().getSOAPHeader();
+                soapRequestHeader = soapRequest.getSaajMessage().getSOAPHeader();
+                SOAPHeaderElement headerResponse;
+                
+                Iterator<SOAPHeaderElement> headers = soapRequestHeader.examineAllHeaderElements();
+                while(headers.hasNext()){
+                    SOAPHeaderElement headerRequest = headers.next();
+                    //System.out.println("Header: "+headerRequest.getElementQName().getLocalPart()+" = "+headerRequest.getValue());
+                    
+                    QName qname= new QName(headerRequest.getElementQName().getNamespaceURI(),headerRequest.getElementQName().getLocalPart(),headerRequest.getElementQName().getPrefix());
+                    headerResponse = soapResponseHeader.addHeaderElement(qname);
+                    if(headerRequest.getValue()!=null){
+                        headerResponse.setValue(""+headerRequest.getValue());
+                    }
+                    
+                    //headerResponse.addChildElement(headerRequest);
+                    if(headerRequest.hasChildNodes()){
+                        Iterator<Node> childElements = headerRequest.getChildElements();
+                        while(childElements.hasNext()){
+                            Node childHeader = childElements.next();
+                            if(childHeader.getLocalName()!=null){
+                                SOAPElement childHeaderResponse = headerResponse.addChildElement(childHeader.getLocalName());
+                                childHeaderResponse.setValue(""+childHeader.getValue());
+                            }
+                        }
+                    }
+                }
+            } catch (SOAPException ex) {
+                System.out.println("SOAPException: "+ex.getMessage());
+            }
+ 
+            System.out.println("====================RESPONSE==============================");
+            try {
+                soapResponseHeader = soapResponse.getSaajMessage().getSOAPHeader();
+                Iterator<SOAPHeaderElement> headers = soapResponseHeader.examineAllHeaderElements();
+                while(headers.hasNext()){
+                    SOAPHeaderElement headerResponse = headers.next();
+                    System.out.println("ResponseHeader: "+headerResponse.getElementQName().getLocalPart()+" = "+headerResponse.getValue());
+                    if(headerResponse.hasChildNodes()){
+                        Iterator<Node> childElements = headerResponse.getChildElements();
+                        while(childElements.hasNext()){
+                            Node childHeader = childElements.next();
+                            System.out.println("Child Element: "+childHeader.getLocalName()+" = "+childHeader.getValue());
+                            
+                        }
+                    }
+                }
+            } catch (SOAPException ex) {
+                System.out.println("SOAPException: "+ex.getMessage());
+            }
+*/
+
+
+            return response;
 	}
 
+        private void handleHeaders(MessageContext messageContext){
+            
+            //Create Response Body and Header
+            SaajSoapMessage soapResponse = (SaajSoapMessage) messageContext.getResponse();
+            SOAPHeader soapResponseHeader;
+
+            SaajSoapMessage soapRequest = (SaajSoapMessage) messageContext.getRequest();
+            SOAPHeader soapRequestHeader;
+            
+            try {
+                soapResponseHeader = soapResponse.getSaajMessage().getSOAPHeader();
+                soapRequestHeader = soapRequest.getSaajMessage().getSOAPHeader();
+                SOAPHeaderElement headerResponse;
+                
+                Iterator<SOAPHeaderElement> headers = soapRequestHeader.examineAllHeaderElements();
+                while(headers.hasNext()){
+                    SOAPHeaderElement headerRequest = headers.next();
+                    //System.out.println("Header: "+headerRequest.getElementQName().getLocalPart()+" = "+headerRequest.getValue());
+                    
+                    QName qname= new QName(headerRequest.getElementQName().getNamespaceURI(),headerRequest.getElementQName().getLocalPart(),headerRequest.getElementQName().getPrefix());
+                    headerResponse = soapResponseHeader.addHeaderElement(qname);
+                    if(headerRequest.getValue()!=null){
+                        headerResponse.setValue(""+headerRequest.getValue());
+                    }
+                    
+                    //headerResponse.addChildElement(headerRequest);
+                    if(headerRequest.hasChildNodes()){
+                        Iterator<Node> childElements = headerRequest.getChildElements();
+                        while(childElements.hasNext()){
+                            Node childHeader = childElements.next();
+                            if(childHeader.getLocalName()!=null){
+                                SOAPElement childHeaderResponse = headerResponse.addChildElement(childHeader.getLocalName());
+                                childHeaderResponse.setValue(""+childHeader.getValue());
+                            }
+                        }
+                    }
+                }
+            } catch (SOAPException ex) {
+                System.out.println("SOAPException: "+ex.getMessage());
+            }
+ 
+            System.out.println("====================RESPONSE==============================");
+            try {
+                soapResponseHeader = soapResponse.getSaajMessage().getSOAPHeader();
+                Iterator<SOAPHeaderElement> headers = soapResponseHeader.examineAllHeaderElements();
+                while(headers.hasNext()){
+                    SOAPHeaderElement headerResponse = headers.next();
+                    System.out.println("ResponseHeader: "+headerResponse.getElementQName().getLocalPart()+" = "+headerResponse.getValue());
+                    if(headerResponse.hasChildNodes()){
+                        Iterator<Node> childElements = headerResponse.getChildElements();
+                        while(childElements.hasNext()){
+                            Node childHeader = childElements.next();
+                            System.out.println("Child Element: "+childHeader.getLocalName()+" = "+childHeader.getValue());
+                            
+                        }
+                    }
+                }
+            } catch (SOAPException ex) {
+                System.out.println("SOAPException: "+ex.getMessage());
+            }
+            
+            
+        }
+        
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaListRequest")
 	@ResponsePayload
-	public GetPersonaListResponse getPersonaList() {
+	public GetPersonaListResponse getPersonaList(MessageContext messageContext) {
             System.out.println("WebService: List persons");
-            return (GetPersonaListResponse) service.showAllPersons();
+            GetPersonaListResponse response = (GetPersonaListResponse) service.showAllPersons();
+
+            handleHeaders(messageContext);
+            
+            return response;
 	}
         
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaListByFirstNameRequest")
 	@ResponsePayload
-	public GetPersonaListResponse getPersonaListByFirstName(@RequestPayload GetPersonaListByFirstNameRequest request) {
+	public GetPersonaListResponse getPersonaListByFirstName(@RequestPayload GetPersonaListByFirstNameRequest request, MessageContext messageContext) {
             System.out.println("WebService: getPersonaListByFirstName: "+request.getFirstName());
-            return (GetPersonaListResponse) service.findByFirstName(request.getFirstName());
+            
+            GetPersonaListResponse response = service.findByFirstName(request.getFirstName());
+
+            handleHeaders(messageContext);
+
+            return response;
 	}
 
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaListByLastNameRequest")
 	@ResponsePayload
-	public GetPersonaListResponse getPersonaListByLastName(@RequestPayload GetPersonaListByLastNameRequest request) {
+	public GetPersonaListResponse getPersonaListByLastName(@RequestPayload GetPersonaListByLastNameRequest request, MessageContext messageContext) {
             System.out.println("WebService: getPersonaListByLastNameRequest: "+request.getLastName());
-            return (GetPersonaListResponse) service.findByLastName(request.getLastName());
+            GetPersonaListResponse response = service.findByLastName(request.getLastName());
+
+            handleHeaders(messageContext);
+
+            return response;
 	}
 
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaListByBirthDateRequest")
 	@ResponsePayload
-	public GetPersonaListResponse getPersonaListByBirthDate(@RequestPayload GetPersonaListByBirthDateRequest request) {
+	public GetPersonaListResponse getPersonaListByBirthDate(@RequestPayload GetPersonaListByBirthDateRequest request, MessageContext messageContext) {
             System.out.println("WebService: GetPersonaListByBirthDateRequest: "+request.getBirthDate());
-            return (GetPersonaListResponse) service.findByBirthDate(request.getBirthDate());
-	}
+            GetPersonaListResponse response =  service.findByBirthDate(request.getBirthDate());
+
+            handleHeaders(messageContext);
+
+            return response;
+        }
 
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaListByPasportRequest")
 	@ResponsePayload
-	public GetPersonaListResponse getPersonaListByPasport(@RequestPayload GetPersonaListByPasportRequest request) {
+	public GetPersonaListResponse getPersonaListByPasport(@RequestPayload GetPersonaListByPasportRequest request, MessageContext messageContext) {
             System.out.println("WebService: GetPersonaListByPasportRequest: "+request.getPasport());
-            return (GetPersonaListResponse) service.findByPasport(request.getPasport());
-	}
+            GetPersonaListResponse response =  service.findByPasport(request.getPasport());
+
+            handleHeaders(messageContext);
+
+            return response;
+        
+        }
 
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaListByUnzrRequest")
 	@ResponsePayload
-	public GetPersonaListResponse getPersonaListByUnzr(@RequestPayload GetPersonaListByUnzrRequest request) {
+	public GetPersonaListResponse getPersonaListByUnzr(@RequestPayload GetPersonaListByUnzrRequest request, MessageContext messageContext) {
             System.out.println("WebService: GetPersonaListByUnzrRequest: "+request.getUnzr());
-            return (GetPersonaListResponse) service.findByUnzr(request.getUnzr());
-	}
+            GetPersonaListResponse response =  service.findByUnzr(request.getUnzr());
+
+            handleHeaders(messageContext);
+
+            return response;
+
+        }
         
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addPersonaRequest")
 	@ResponsePayload
-	public AddPersonaResponse addPersona(@RequestPayload AddPersonaRequest request) {
+	public AddPersonaResponse addPersona(@RequestPayload AddPersonaRequest request, MessageContext messageContext) {
             System.out.println("WebService: Add persona");
-            return (AddPersonaResponse) service.addPersona(request);
-	}
+            AddPersonaResponse response =  service.addPersona(request);
+
+            handleHeaders(messageContext);
+
+            return response;
+        }
 
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deletePersonaRequest")
 	@ResponsePayload
         @Transactional
-	public DeletePersonaResponse deletePersona(@RequestPayload DeletePersonaRequest request) {
+	public DeletePersonaResponse deletePersona(@RequestPayload DeletePersonaRequest request, MessageContext messageContext) {
             System.out.println("WebService: Delete persona");
-            return (DeletePersonaResponse) service.deletePersona(request.getRnokpp());
-	}
+            DeletePersonaResponse response = service.deletePersona(request.getRnokpp());
+
+            handleHeaders(messageContext);
+
+            return response;
+
+        }
 
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "updatePersonaRequest")
 	@ResponsePayload
-	public UpdatePersonaResponse updatePersona(@RequestPayload UpdatePersonaRequest request) {
+	public UpdatePersonaResponse updatePersona(@RequestPayload UpdatePersonaRequest request, MessageContext messageContext) {
             System.out.println("WebService: Update persona");
-            return (UpdatePersonaResponse) service.updatePersona(request);
-	}
+            UpdatePersonaResponse response = service.updatePersona(request);
+
+            handleHeaders(messageContext);
+
+            return response;
+        }
 
 }
