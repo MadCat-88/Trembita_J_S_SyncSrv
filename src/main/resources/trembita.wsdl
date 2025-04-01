@@ -16,10 +16,24 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getPersonaListByFirstNameResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="personaXml" type="tns:personaXml"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="getPersonaListByLastNameRequest">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="lastName" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPersonaListByLastNameResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="personaXml" type="tns:personaXml"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -30,6 +44,13 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getPersonaListByBirthDateResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="personaXml" type="tns:personaXml"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="getPersonaListByPasportRequest">
                 <xs:complexType>
                     <xs:sequence>
@@ -37,10 +58,24 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getPersonaListByPasportResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="personaXml" type="tns:personaXml"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="getPersonaListByUnzrRequest">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="unzr" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPersonaListByUnzrResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="personaXml" type="tns:personaXml"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

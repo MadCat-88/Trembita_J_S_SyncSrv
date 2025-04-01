@@ -17,6 +17,14 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+  <xs:element name="getPersonaListByFirstNameResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="personaXml" type="tns:personaXml"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+    </xs:element>
 
     <xs:element name="getPersonaListByLastNameRequest">
         <xs:complexType>
@@ -26,12 +34,29 @@
         </xs:complexType>
     </xs:element>
 
+<xs:element name="getPersonaListByLastNameResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="personaXml" type="tns:personaXml"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+    </xs:element>
+
     <xs:element name="getPersonaListByBirthDateRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="birthDate" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
+    </xs:element>
+    <xs:element name="getPersonaListByBirthDateResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="personaXml" type="tns:personaXml"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
     </xs:element>
 
     <xs:element name="getPersonaListByPasportRequest">
@@ -41,6 +66,15 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <xs:element name="getPersonaListByPasportResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="personaXml" type="tns:personaXml"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+    </xs:element>
+
 
     <xs:element name="getPersonaListByUnzrRequest">
         <xs:complexType>
@@ -48,6 +82,14 @@
                 <xs:element name="unzr" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
+    </xs:element>
+    <xs:element name="getPersonaListByUnzrResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="personaXml" type="tns:personaXml"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
     </xs:element>
 
 

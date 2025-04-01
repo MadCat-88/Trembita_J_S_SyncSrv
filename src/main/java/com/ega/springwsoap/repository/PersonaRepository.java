@@ -39,7 +39,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>{
     List <Persona> findAllByPasport(String pasport);
 
     List <Persona> findAllByUnzr(String unzr);
-    
+
     //приклад кастомного метода в якому напряму задається що щукати (всі імʼя яки мають в назві шаблон)
     @Query("SELECT e FROM Persona e WHERE e.firstName LIKE %:firstName%")
     List <Persona> findAllByFirstNameContaining(@Param("firstName") String firstName);

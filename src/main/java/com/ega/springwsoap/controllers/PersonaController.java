@@ -21,6 +21,7 @@ import io.spring.guides.gs_producing_web_service.GetPersonaListByFirstNameReques
 import io.spring.guides.gs_producing_web_service.GetPersonaListByLastNameRequest;
 import io.spring.guides.gs_producing_web_service.GetPersonaListByPasportRequest;
 import io.spring.guides.gs_producing_web_service.GetPersonaListByUnzrRequest;
+import io.spring.guides.gs_producing_web_service.GetPersonaListByUnzrResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaListResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaRequest;
 import io.spring.guides.gs_producing_web_service.UpdatePersonaRequest;
@@ -151,8 +152,10 @@ public class PersonaController {
                         Iterator<Node> childElements = headerRequest.getChildElements();
                         while(childElements.hasNext()){
                             Node childHeader = childElements.next();
+                            System.out.println(childHeader.getNodeName()+"/"+childHeader.getBaseURI()+"/"+childHeader.getPrefix());
                             if(childHeader.getLocalName()!=null){
                                 SOAPElement childHeaderResponse = headerResponse.addChildElement(childHeader.getLocalName());
+                                //childHeaderResponse.addNamespaceDeclaration(NAMESPACE_URI, NAMESPACE_URI)
                                 childHeaderResponse.setValue(""+childHeader.getValue());
                             }
                         }
@@ -201,7 +204,7 @@ public class PersonaController {
 	public GetPersonaListResponse getPersonaListByFirstName(@RequestPayload GetPersonaListByFirstNameRequest request, MessageContext messageContext) {
             System.out.println("WebService: getPersonaListByFirstName: "+request.getFirstName());
             
-            GetPersonaListResponse response = service.findByFirstName(request.getFirstName());
+            GetPersonaListResponse response = (GetPersonaListResponse) service.findByFirstName(request.getFirstName());
 
             handleHeaders(messageContext);
 
@@ -212,7 +215,7 @@ public class PersonaController {
 	@ResponsePayload
 	public GetPersonaListResponse getPersonaListByLastName(@RequestPayload GetPersonaListByLastNameRequest request, MessageContext messageContext) {
             System.out.println("WebService: getPersonaListByLastNameRequest: "+request.getLastName());
-            GetPersonaListResponse response = service.findByLastName(request.getLastName());
+            GetPersonaListResponse response = (GetPersonaListResponse) service.findByLastName(request.getLastName());
 
             handleHeaders(messageContext);
 
@@ -223,7 +226,7 @@ public class PersonaController {
 	@ResponsePayload
 	public GetPersonaListResponse getPersonaListByBirthDate(@RequestPayload GetPersonaListByBirthDateRequest request, MessageContext messageContext) {
             System.out.println("WebService: GetPersonaListByBirthDateRequest: "+request.getBirthDate());
-            GetPersonaListResponse response =  service.findByBirthDate(request.getBirthDate());
+            GetPersonaListResponse response =  (GetPersonaListResponse) service.findByBirthDate(request.getBirthDate());
 
             handleHeaders(messageContext);
 
@@ -234,7 +237,7 @@ public class PersonaController {
 	@ResponsePayload
 	public GetPersonaListResponse getPersonaListByPasport(@RequestPayload GetPersonaListByPasportRequest request, MessageContext messageContext) {
             System.out.println("WebService: GetPersonaListByPasportRequest: "+request.getPasport());
-            GetPersonaListResponse response =  service.findByPasport(request.getPasport());
+            GetPersonaListResponse response =  (GetPersonaListResponse) service.findByPasport(request.getPasport());
 
             handleHeaders(messageContext);
 
@@ -244,9 +247,9 @@ public class PersonaController {
 
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaListByUnzrRequest")
 	@ResponsePayload
-	public GetPersonaListResponse getPersonaListByUnzr(@RequestPayload GetPersonaListByUnzrRequest request, MessageContext messageContext) {
+	public GetPersonaListByUnzrResponse getPersonaListByUnzr(@RequestPayload GetPersonaListByUnzrRequest request, MessageContext messageContext) {
             System.out.println("WebService: GetPersonaListByUnzrRequest: "+request.getUnzr());
-            GetPersonaListResponse response =  service.findByUnzr(request.getUnzr());
+            GetPersonaListByUnzrResponse response =  (GetPersonaListByUnzrResponse) service.findByUnzr(request.getUnzr());
 
             handleHeaders(messageContext);
 
@@ -258,7 +261,7 @@ public class PersonaController {
 	@ResponsePayload
 	public AddPersonaResponse addPersona(@RequestPayload AddPersonaRequest request, MessageContext messageContext) {
             System.out.println("WebService: Add persona");
-            AddPersonaResponse response =  service.addPersona(request);
+            AddPersonaResponse response =  (AddPersonaResponse)service.addPersona(request);
 
             handleHeaders(messageContext);
 
@@ -270,7 +273,7 @@ public class PersonaController {
         @Transactional
 	public DeletePersonaResponse deletePersona(@RequestPayload DeletePersonaRequest request, MessageContext messageContext) {
             System.out.println("WebService: Delete persona");
-            DeletePersonaResponse response = service.deletePersona(request.getRnokpp());
+            DeletePersonaResponse response = (DeletePersonaResponse) service.deletePersona(request.getRnokpp());
 
             handleHeaders(messageContext);
 
@@ -282,7 +285,7 @@ public class PersonaController {
 	@ResponsePayload
 	public UpdatePersonaResponse updatePersona(@RequestPayload UpdatePersonaRequest request, MessageContext messageContext) {
             System.out.println("WebService: Update persona");
-            UpdatePersonaResponse response = service.updatePersona(request);
+            UpdatePersonaResponse response = (UpdatePersonaResponse) service.updatePersona(request);
 
             handleHeaders(messageContext);
 

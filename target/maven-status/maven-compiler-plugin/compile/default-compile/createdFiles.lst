@@ -11,9 +11,11 @@ eu/x_road/xsd/identifiers/XRoadServiceIdentifierType.class
 io/spring/guides/gs_producing_web_service/GetPersonaListByBirthDateRequest.class
 eu/x_road/xsd/identifiers/XRoadIdentifierType.class
 io/spring/guides/gs_producing_web_service/DeletePersonaRequest.class
+io/spring/guides/gs_producing_web_service/GetPersonaListByPasportResponse.class
 com/ega/springwsoap/models/Answer$AnswerBuilder.class
 com/ega/springwsoap/repository/PersonaRepository.class
 io/spring/guides/gs_producing_web_service/GetPersonaListResponse.class
+io/spring/guides/gs_producing_web_service/GetPersonaListByFirstNameResponse.class
 com/ega/springwsoap/models/Answer.class
 io/spring/guides/gs_producing_web_service/GetPersonaListByPasportRequest.class
 io/spring/guides/gs_producing_web_service/GetPersonaListByFirstNameRequest.class
@@ -25,6 +27,7 @@ com/ega/springwsoap/models/Persona.class
 io/spring/guides/gs_producing_web_service/GetPersonaListRequest.class
 eu/x_road/xsd/xroad/ObjectFactory.class
 io/spring/guides/gs_producing_web_service/AddPersonaResponse.class
+io/spring/guides/gs_producing_web_service/GetPersonaListByUnzrResponse.class
 io/spring/guides/gs_producing_web_service/GetPersonaRequest.class
 eu/x_road/xsd/identifiers/ObjectFactory.class
 com/ega/springwsoap/SpringWSoapApplication.class
@@ -42,3 +45,5 @@ io/spring/guides/gs_producing_web_service/AnswerXml.class
 com/ega/springwsoap/models/LogRecord.class
 io/spring/guides/gs_producing_web_service/PersonaXml.class
 eu/x_road/xsd/identifiers/package-info.class
+io/spring/guides/gs_producing_web_service/GetPersonaListByBirthDateResponse.class
+io/spring/guides/gs_producing_web_service/GetPersonaListByLastNameResponse.class
