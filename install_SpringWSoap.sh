@@ -124,10 +124,11 @@ else
 fi
 
 echo "******************************************************************************
-*                  встановлення Apache NetBeans 19
+*                  встановлення Maven
 ******************************************************************************"
 
-sudo dpkg -i $netbeans19
+#sudo dpkg -i $netbeans19
+sudo apt install maven -y
 
 echo "******************************************************************************
 *                  встановлення Github client
@@ -174,8 +175,8 @@ sed -i "s/User=sa/User=$currentuser/g" $autostartFile
 sudo chown -R $currentuser:$currentuser ./SpringWSsoap
 
 cd ./SpringWSsoap
-#sudo bash mvnw -N wrapper:wrapper
-/usr/lib/apache-netbeans/java/maven/bin/mvn package
+
+/usr/bin/mvn package
 
 
 
