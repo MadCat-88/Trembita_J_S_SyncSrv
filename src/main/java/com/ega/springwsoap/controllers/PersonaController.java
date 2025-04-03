@@ -14,6 +14,8 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import com.ega.springwsoap.services.PersonaServiceImpl;
 import io.spring.guides.gs_producing_web_service.AddPersonaRequest;
 import io.spring.guides.gs_producing_web_service.AddPersonaResponse;
+import io.spring.guides.gs_producing_web_service.CheckPersonaRequest;
+import io.spring.guides.gs_producing_web_service.CheckPersonaResponse;
 import io.spring.guides.gs_producing_web_service.DeletePersonaRequest;
 import io.spring.guides.gs_producing_web_service.DeletePersonaResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaListByBirthDateRequest;
@@ -57,68 +59,6 @@ public class PersonaController {
 
             handleHeaders(messageContext);
 
-/*            
-            //Create Response Body and Header
-            SaajSoapMessage soapResponse = (SaajSoapMessage) messageContext.getResponse();
-            SOAPHeader soapResponseHeader;
-
-            SaajSoapMessage soapRequest = (SaajSoapMessage) messageContext.getRequest();
-            SOAPHeader soapRequestHeader;
-            
-            try {
-                soapResponseHeader = soapResponse.getSaajMessage().getSOAPHeader();
-                soapRequestHeader = soapRequest.getSaajMessage().getSOAPHeader();
-                SOAPHeaderElement headerResponse;
-                
-                Iterator<SOAPHeaderElement> headers = soapRequestHeader.examineAllHeaderElements();
-                while(headers.hasNext()){
-                    SOAPHeaderElement headerRequest = headers.next();
-                    //System.out.println("Header: "+headerRequest.getElementQName().getLocalPart()+" = "+headerRequest.getValue());
-                    
-                    QName qname= new QName(headerRequest.getElementQName().getNamespaceURI(),headerRequest.getElementQName().getLocalPart(),headerRequest.getElementQName().getPrefix());
-                    headerResponse = soapResponseHeader.addHeaderElement(qname);
-                    if(headerRequest.getValue()!=null){
-                        headerResponse.setValue(""+headerRequest.getValue());
-                    }
-                    
-                    //headerResponse.addChildElement(headerRequest);
-                    if(headerRequest.hasChildNodes()){
-                        Iterator<Node> childElements = headerRequest.getChildElements();
-                        while(childElements.hasNext()){
-                            Node childHeader = childElements.next();
-                            if(childHeader.getLocalName()!=null){
-                                SOAPElement childHeaderResponse = headerResponse.addChildElement(childHeader.getLocalName());
-                                childHeaderResponse.setValue(""+childHeader.getValue());
-                            }
-                        }
-                    }
-                }
-            } catch (SOAPException ex) {
-                System.out.println("SOAPException: "+ex.getMessage());
-            }
- 
-            System.out.println("====================RESPONSE==============================");
-            try {
-                soapResponseHeader = soapResponse.getSaajMessage().getSOAPHeader();
-                Iterator<SOAPHeaderElement> headers = soapResponseHeader.examineAllHeaderElements();
-                while(headers.hasNext()){
-                    SOAPHeaderElement headerResponse = headers.next();
-                    System.out.println("ResponseHeader: "+headerResponse.getElementQName().getLocalPart()+" = "+headerResponse.getValue());
-                    if(headerResponse.hasChildNodes()){
-                        Iterator<Node> childElements = headerResponse.getChildElements();
-                        while(childElements.hasNext()){
-                            Node childHeader = childElements.next();
-                            System.out.println("Child Element: "+childHeader.getLocalName()+" = "+childHeader.getValue());
-                            
-                        }
-                    }
-                }
-            } catch (SOAPException ex) {
-                System.out.println("SOAPException: "+ex.getMessage());
-            }
-*/
-
-
             return response;
 	}
 
@@ -152,7 +92,7 @@ public class PersonaController {
                         Iterator<Node> childElements = headerRequest.getChildElements();
                         while(childElements.hasNext()){
                             Node childHeader = childElements.next();
-                            System.out.println(childHeader.getNodeName()+"/"+childHeader.getBaseURI()+"/"+childHeader.getPrefix());
+                            //System.out.println(childHeader.getNodeName()+"/"+childHeader.getBaseURI()+"/"+childHeader.getPrefix());
                             if(childHeader.getLocalName()!=null){
                                 SOAPElement childHeaderResponse = headerResponse.addChildElement(childHeader.getLocalName());
                                 //childHeaderResponse.addNamespaceDeclaration(NAMESPACE_URI, NAMESPACE_URI)
@@ -165,27 +105,6 @@ public class PersonaController {
                 System.out.println("SOAPException: "+ex.getMessage());
             }
  
-            System.out.println("====================RESPONSE==============================");
-            try {
-                soapResponseHeader = soapResponse.getSaajMessage().getSOAPHeader();
-                Iterator<SOAPHeaderElement> headers = soapResponseHeader.examineAllHeaderElements();
-                while(headers.hasNext()){
-                    SOAPHeaderElement headerResponse = headers.next();
-                    System.out.println("ResponseHeader: "+headerResponse.getElementQName().getLocalPart()+" = "+headerResponse.getValue());
-                    if(headerResponse.hasChildNodes()){
-                        Iterator<Node> childElements = headerResponse.getChildElements();
-                        while(childElements.hasNext()){
-                            Node childHeader = childElements.next();
-                            System.out.println("Child Element: "+childHeader.getLocalName()+" = "+childHeader.getValue());
-                            
-                        }
-                    }
-                }
-            } catch (SOAPException ex) {
-                System.out.println("SOAPException: "+ex.getMessage());
-            }
-            
-            
         }
         
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaListRequest")
@@ -247,9 +166,9 @@ public class PersonaController {
 
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPersonaListByUnzrRequest")
 	@ResponsePayload
-	public GetPersonaListByUnzrResponse getPersonaListByUnzr(@RequestPayload GetPersonaListByUnzrRequest request, MessageContext messageContext) {
+	public GetPersonaListResponse getPersonaListByUnzr(@RequestPayload GetPersonaListByUnzrRequest request, MessageContext messageContext) {
             System.out.println("WebService: GetPersonaListByUnzrRequest: "+request.getUnzr());
-            GetPersonaListByUnzrResponse response =  (GetPersonaListByUnzrResponse) service.findByUnzr(request.getUnzr());
+            GetPersonaListResponse response =  (GetPersonaListResponse) service.findByUnzr(request.getUnzr());
 
             handleHeaders(messageContext);
 
@@ -268,6 +187,18 @@ public class PersonaController {
             return response;
         }
 
+        @PayloadRoot(namespace = NAMESPACE_URI, localPart = "checkPersonaRequest")
+	@ResponsePayload
+	public CheckPersonaResponse checkPersona(@RequestPayload CheckPersonaRequest request, MessageContext messageContext) {
+            System.out.println("WebService: Check persona");
+            CheckPersonaResponse response =  (CheckPersonaResponse)service.checkPersona(request.getRnokpp());
+
+            handleHeaders(messageContext);
+
+            return response;
+        }
+        
+        
         @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deletePersonaRequest")
 	@ResponsePayload
         @Transactional

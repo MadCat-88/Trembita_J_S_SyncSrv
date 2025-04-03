@@ -21,6 +21,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 //Click https://projectlombok.org/features/ to view all features of lombok
 import lombok.Data;
+import lombok.NonNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -58,7 +59,7 @@ public class Persona {
     
     //Говорить що наступне поле потрібно зробити унікальним в БД
     @Column(unique = true)
-//    @NonNull
+    @NonNull
     private String rnokpp;
     //Говорить що це поле буде розраховуватись
     @Transient

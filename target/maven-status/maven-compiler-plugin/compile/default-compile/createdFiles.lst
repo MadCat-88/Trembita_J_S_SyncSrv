@@ -3,12 +3,14 @@ io/spring/guides/gs_producing_web_service/package-info.class
 com/ega/springwsoap/services/PersonaServiceImpl.class
 io/spring/guides/gs_producing_web_service/GetPersonaListByLastNameRequest.class
 io/spring/guides/gs_producing_web_service/UpdatePersonaRequest.class
+io/spring/guides/gs_producing_web_service/CheckPersonaRequest.class
 eu/x_road/xsd/identifiers/XRoadObjectType.class
 io/spring/guides/gs_producing_web_service/GetPersonaResponse.class
 io/spring/guides/gs_producing_web_service/ObjectFactory.class
 io/spring/guides/gs/producing_web_service/PersonsPortService.class
 eu/x_road/xsd/identifiers/XRoadServiceIdentifierType.class
 io/spring/guides/gs_producing_web_service/GetPersonaListByBirthDateRequest.class
+io/spring/guides/gs_producing_web_service/CheckPersonaResponse.class
 eu/x_road/xsd/identifiers/XRoadIdentifierType.class
 io/spring/guides/gs_producing_web_service/DeletePersonaRequest.class
 io/spring/guides/gs_producing_web_service/GetPersonaListByPasportResponse.class

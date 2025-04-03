@@ -14,6 +14,7 @@ import com.ega.springwsoap.repository.PersonaRepository;
 import io.spring.guides.gs_producing_web_service.AddPersonaRequest;
 import io.spring.guides.gs_producing_web_service.AddPersonaResponse;
 import io.spring.guides.gs_producing_web_service.AnswerXml;
+import io.spring.guides.gs_producing_web_service.CheckPersonaResponse;
 import io.spring.guides.gs_producing_web_service.DeletePersonaResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaListByUnzrResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaListResponse;
@@ -151,16 +152,22 @@ public class PersonaServiceImpl implements PersonaInterface{
     //Видаляє персону по РНОКПП
     public DeletePersonaResponse deletePersona(String rnokpp) {
             Answer ans;
-            ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
+            ans = Answer.builder().status(Boolean.FALSE).descr("Невідома помилка").build();
             DeletePersonaResponse response = new DeletePersonaResponse();
 
 
             try{
-              repository.deleteByRnokpp(rnokpp);
-              //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
-              ans.setStatus(Boolean.TRUE);
-              ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
-              ans.setResult("Persona with RNOKPP: "+rnokpp+" was deleted!");  //Тут результат відповіді.
+                Persona persona = repository.findByRnokpp(rnokpp);
+                if(persona!=null){
+                    repository.deleteByRnokpp(rnokpp);
+                    //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
+                    ans.setStatus(Boolean.TRUE);
+                    ans.setDescr("");   //В описі відповіді вказуемо що запит успішний.
+                    ans.setResult("Персона з РНОКПП: "+rnokpp+" була видалена з БД!");  //Тут результат відповіді.
+                }else{
+                    ans.setDescr("Персону з РНОКПП: "+rnokpp+" не було знайдено в БД!");   //В описі відповіді вказуемо що запит успішний.
+                    
+                }
             }catch (Exception ex){                    //якщо помилка
                 ans.setDescr(ex.getMessage());        //надаємо опис помилки
             }
@@ -178,15 +185,16 @@ public class PersonaServiceImpl implements PersonaInterface{
           ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
           try{
             Persona persona = repository.findByRnokpp(rnokpp);
-            ans.setStatus(Boolean.TRUE);            
-            ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
             if(persona == null){
-                ans.setResult("Persona with rnokpp "+rnokpp+" not found in database!");       //Тут результат відповіді.                
+                ans.setResult("Персона з РНОКПП "+rnokpp+" не знайдена в БД!");       //Тут результат відповіді.                
+                ans.setDescr("Персона з РНОКПП "+rnokpp+" не знайдена в БД!");   //В описі відповіді вказуемо що запит не успішний.
             }else{
+                ans.setStatus(Boolean.TRUE);            
+                ans.setDescr("");   
                 persona.setIsChecked(Boolean.TRUE);
                 repository.save(persona);
                 //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
-                ans.setResult("Persona is checked!");       //Тут результат відповіді.
+                ans.setResult("Персона перевірена!");       //Тут результат відповіді.
                 
             }
           }catch (Exception ex){                    //якщо помилка
@@ -200,45 +208,49 @@ public class PersonaServiceImpl implements PersonaInterface{
 
     @Override
     //Функція перевіряє поточний статус персони
-    public Answer checkPersona(String rnokpp) {
-          Answer ans;
-          ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
-          try{
+    public CheckPersonaResponse checkPersona(String rnokpp) {
+        CheckPersonaResponse response= new CheckPersonaResponse();
+        Answer ans;
+        ans = Answer.builder().status(Boolean.FALSE).descr("Unknown error").build();
+        try{
             Persona persona = repository.findByRnokpp(rnokpp);
-            ans.setStatus(Boolean.TRUE);            
-            ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
             if(persona == null){
-                ans.setResult("Persona with rnokpp "+rnokpp+" not found in database!");       //Тут результат відповіді.                
+                ans.setStatus(Boolean.FALSE);            
+                ans.setResult("Персона з РНОКПП "+rnokpp+" не знайдена в БД!");       //Тут результат відповіді.                
             }else if(persona.getIsChecked()==true){
-                //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
+                ans.setStatus(Boolean.TRUE);            
                 ans.setResult("Persona is checked!");       //Тут результат відповіді.
-                
+
             }else {
                 LocalDateTime dt = LocalDateTime.now();
                 LocalDateTime dr = persona.getCheckedRequest();
+                ans.setStatus(Boolean.TRUE);            
+                ans.setDescr("");            
                 if((dr==null)||(dr.getYear()==1)){
                     persona.setCheckedRequest(dt);
                     repository.save(persona);
-                    ans.setResult("Request for checking Persona in progress!");       //Тут результат відповіді.
+                    ans.setResult("Запит на перевірку надіслано успішно!");       //Тут результат відповіді.
                 }else{
                     dr = dr.plusMinutes(5);
                     if (dt.isAfter(dr)){                    
                         persona.setIsChecked(Boolean.TRUE);
                         repository.save(persona);
-                        ans.setResult("Persona is checked!");       //Тут результат відповіді.
+                        ans.setResult("Персона перевірена успішно!");       //Тут результат відповіді.
                     }else{
-                        ans.setResult("Checking Persona in progress!");       //Тут результат відповіді.
+                        ans.setResult("Перевірка персони ще триває!");       //Тут результат відповіді.
                     }
-                    
+
                 }
             }
-          }catch (Exception ex){                    //якщо помилка
-              ans.setDescr(ex.getMessage());        //надаємо опис помилки
-          }
-          
-          //запис лога
-          writeLog(ans);
-          return ans;           //повертаємо результат до контролера.
+        }catch (Exception ex){                    //якщо помилка
+            ans.setDescr(ex.getMessage());        //надаємо опис помилки
+        }
+        
+        System.out.println(ans.toString());
+        response.setAnswerXml(ans.toXml());
+        //запис лога
+        writeLog(ans);
+        return response;           //повертаємо результат до контролера.
     }
 
     //запис лога
@@ -402,8 +414,8 @@ public class PersonaServiceImpl implements PersonaInterface{
     }
 
     @Override
-    public GetPersonaListByUnzrResponse findByUnzr(String unzr) {
-          GetPersonaListByUnzrResponse response = new GetPersonaListByUnzrResponse();
+    public GetPersonaListResponse findByUnzr(String unzr) {
+          GetPersonaListResponse response = new GetPersonaListResponse();
           Answer ans;
         ans = Answer.builder().status(Boolean.FALSE).descr("Невідома помилка").build();
           try{

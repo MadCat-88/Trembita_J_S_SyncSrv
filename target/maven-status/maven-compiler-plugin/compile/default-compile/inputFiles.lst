@@ -25,6 +25,8 @@
 /home/sa/NetBeansProjects/SpringWSsoap/target/generated-sources/cxf/io/spring/guides/gs_producing_web_service/AddPersonaRequest.java
 /home/sa/NetBeansProjects/SpringWSsoap/target/generated-sources/cxf/io/spring/guides/gs_producing_web_service/AddPersonaResponse.java
 /home/sa/NetBeansProjects/SpringWSsoap/target/generated-sources/cxf/io/spring/guides/gs_producing_web_service/AnswerXml.java
+/home/sa/NetBeansProjects/SpringWSsoap/target/generated-sources/cxf/io/spring/guides/gs_producing_web_service/CheckPersonaRequest.java
+/home/sa/NetBeansProjects/SpringWSsoap/target/generated-sources/cxf/io/spring/guides/gs_producing_web_service/CheckPersonaResponse.java
 /home/sa/NetBeansProjects/SpringWSsoap/target/generated-sources/cxf/io/spring/guides/gs_producing_web_service/DeletePersonaRequest.java
 /home/sa/NetBeansProjects/SpringWSsoap/target/generated-sources/cxf/io/spring/guides/gs_producing_web_service/DeletePersonaResponse.java
 /home/sa/NetBeansProjects/SpringWSsoap/target/generated-sources/cxf/io/spring/guides/gs_producing_web_service/GetPersonaListByBirthDateRequest.java
