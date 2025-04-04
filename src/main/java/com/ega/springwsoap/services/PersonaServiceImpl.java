@@ -16,7 +16,6 @@ import io.spring.guides.gs_producing_web_service.AddPersonaResponse;
 import io.spring.guides.gs_producing_web_service.AnswerXml;
 import io.spring.guides.gs_producing_web_service.CheckPersonaResponse;
 import io.spring.guides.gs_producing_web_service.DeletePersonaResponse;
-import io.spring.guides.gs_producing_web_service.GetPersonaListByUnzrResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaListResponse;
 import io.spring.guides.gs_producing_web_service.PersonaXml;
 import io.spring.guides.gs_producing_web_service.UpdatePersonaRequest;
@@ -72,7 +71,7 @@ public class PersonaServiceImpl implements PersonaInterface{
             
             //якщо визов функції не перервався помилкою, то вважаємо його успішним, та записуемо в Статус відповіді
             ans.setStatus(Boolean.TRUE);            
-            ans.setDescr("Successfully request");   //В описі відповіді вказуемо що запит успішний.
+            ans.setDescr("");   //В описі відповіді вказуемо що запит успішний.
             JSONArray arr = new JSONArray();
             result.forEach(persona -> arr.put(persona.toJSON()));
             ans.setResult(arr.toString());       //Тут результат відповіді.
@@ -102,7 +101,7 @@ public class PersonaServiceImpl implements PersonaInterface{
             try {
                 repository.save(persona);
                 ans.setStatus(Boolean.TRUE);
-                ans.setDescr("Persona added successfully");
+                ans.setDescr("Персону додано успішно!");
                 ans.setResult(persona.toJSON().toString());       //Тут результат відповіді.
             }catch(Exception ex){
                 ans.setDescr("Error: "+ex.getMessage());
@@ -128,10 +127,16 @@ public class PersonaServiceImpl implements PersonaInterface{
             
             try {
                 persona = repository.findByRnokpp(request.getRnokpp());
-                BeanUtils.copyProperties(request, persona);
-                repository.save(persona);
-                ans.setStatus(Boolean.TRUE);
-                ans.setDescr("Persona with RNOKPP "+request.getRnokpp()+" updated successfully");
+                if(persona==null){
+                    ans.setResult("Персону з РНОКПП "+request.getRnokpp()+" не знайдено в БД");
+                    ans.setDescr("Персону з РНОКПП "+request.getRnokpp()+" не знайдено в БД");
+                }else{
+                    BeanUtils.copyProperties(request, persona);
+                    repository.save(persona);
+                    ans.setStatus(Boolean.TRUE);
+                    ans.setResult("Персона з РНОКПП "+request.getRnokpp()+" успішно оновлена");
+                    ans.setDescr("Персона з РНОКПП "+request.getRnokpp()+" успішно оновлена");
+                }
             }catch(Exception ex){
                 ans.setDescr("Error: "+ex.getMessage());
             }
