@@ -23,7 +23,6 @@ import io.spring.guides.gs_producing_web_service.GetPersonaListByFirstNameReques
 import io.spring.guides.gs_producing_web_service.GetPersonaListByLastNameRequest;
 import io.spring.guides.gs_producing_web_service.GetPersonaListByPasportRequest;
 import io.spring.guides.gs_producing_web_service.GetPersonaListByUnzrRequest;
-import io.spring.guides.gs_producing_web_service.GetPersonaListByUnzrResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaListResponse;
 import io.spring.guides.gs_producing_web_service.GetPersonaRequest;
 import io.spring.guides.gs_producing_web_service.UpdatePersonaRequest;
@@ -79,7 +78,6 @@ public class PersonaController {
                 Iterator<SOAPHeaderElement> headers = soapRequestHeader.examineAllHeaderElements();
                 while(headers.hasNext()){
                     SOAPHeaderElement headerRequest = headers.next();
-                    //System.out.println("Header: "+headerRequest.getElementQName().getLocalPart()+" = "+headerRequest.getValue());
                     
                     QName qname= new QName(headerRequest.getElementQName().getNamespaceURI(),headerRequest.getElementQName().getLocalPart(),headerRequest.getElementQName().getPrefix());
                     headerResponse = soapResponseHeader.addHeaderElement(qname);
@@ -87,15 +85,12 @@ public class PersonaController {
                         headerResponse.setValue(""+headerRequest.getValue());
                     }
                     
-                    //headerResponse.addChildElement(headerRequest);
                     if(headerRequest.hasChildNodes()){
                         Iterator<Node> childElements = headerRequest.getChildElements();
                         while(childElements.hasNext()){
                             Node childHeader = childElements.next();
-                            //System.out.println(childHeader.getNodeName()+"/"+childHeader.getBaseURI()+"/"+childHeader.getPrefix());
                             if(childHeader.getLocalName()!=null){
                                 SOAPElement childHeaderResponse = headerResponse.addChildElement(childHeader.getLocalName());
-                                //childHeaderResponse.addNamespaceDeclaration(NAMESPACE_URI, NAMESPACE_URI)
                                 childHeaderResponse.setValue(""+childHeader.getValue());
                             }
                         }

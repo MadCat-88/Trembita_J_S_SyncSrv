@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ega.springwsoap.models;
 
-//import io.spring.guides.gs_producing_web_service.PersonaXml;
 import io.spring.guides.gs_producing_web_service.PersonaXml;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +14,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-//Click https://projectlombok.org/features/ to view all features of lombok
 import lombok.Data;
 import lombok.NonNull;
 import org.json.JSONArray;
@@ -106,7 +100,6 @@ public class Persona {
     //метод який перетворює персону в JSON об'єкт
     public JSONObject toJSON(){
         JSONObject jsData=new JSONObject();
-        //Persona persona = result.get(i);
         jsData.put("id",getId());
         jsData.put("firstName",getFirstName());
         jsData.put("lastName",getLastName());
