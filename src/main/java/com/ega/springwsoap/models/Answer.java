@@ -4,8 +4,6 @@
  */
 package com.ega.springwsoap.models;
 
-//import io.spring.guides.gs_producing_web_service.AnswerXml;
-
 import io.spring.guides.gs_producing_web_service.AnswerXml;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
